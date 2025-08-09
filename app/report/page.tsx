@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Upload, LinkIcon, AlertTriangle, CheckCircle, ArrowLeft, Shield, FileText, Camera, Video } from "lucide-react"
+import { Upload, Link2, AlertTriangle, CheckCircle, ArrowLeft, Shield, FileText } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 import { Progress } from "@/components/ui/progress"
+import Image from "next/image"
 
 export default function ReportPage() {
   const [reportType, setReportType] = useState<"upload" | "url" | "">("")
@@ -45,75 +46,63 @@ export default function ReportPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
-        <Card className="w-full max-w-2xl">
-          <CardHeader className="text-center">
-            <CheckCircle className="h-20 w-20 text-green-600 mx-auto mb-4" />
-            <CardTitle className="text-3xl text-green-800">Laporan Berhasil Dikirim</CardTitle>
-            <CardDescription className="text-lg">
-              Laporan Anda telah diterima dan sedang diproses oleh sistem AI JejakJudi
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <Card className="w-full max-w-2xl shadow-sm border-gray-200">
+          <CardHeader className="text-center border-b">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <Image src="/images/jejakjudi.png" alt="JejakJudi" width={32} height={32} />
+              <div>
+                <h3 className="text-lg font-bold text-black">JejakJudi</h3>
+                <p className="text-xs text-gray-600">Detektif Digital Anti-Judi</p>
+              </div>
+            </div>
+            <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <CardTitle className="text-2xl text-black">Laporan Berhasil Dikirim</CardTitle>
+            <CardDescription>
+              Laporan Anda telah diterima dan sedang diproses oleh sistem AI
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+          <CardContent className="p-6 space-y-6">
+            <div className="bg-gray-50 p-4 rounded-lg border">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-green-600 font-medium">ID Laporan</p>
-                  <p className="font-mono text-green-800">JJ-2025-001234</p>
+                  <p className="text-gray-600 font-medium">ID Laporan</p>
+                  <p className="font-mono text-black">JJ-2025-001234</p>
                 </div>
                 <div>
-                  <p className="text-green-600 font-medium">Status</p>
-                  <p className="text-green-800">Sedang Dianalisis AI</p>
+                  <p className="text-gray-600 font-medium">Status</p>
+                  <p className="text-black">Sedang Dianalisis</p>
                 </div>
                 <div>
-                  <p className="text-green-600 font-medium">Platform</p>
-                  <p className="text-green-800">{formData.platform || "Instagram"}</p>
+                  <p className="text-gray-600 font-medium">Platform</p>
+                  <p className="text-black">{formData.platform || "Instagram"}</p>
                 </div>
                 <div>
-                  <p className="text-green-600 font-medium">Estimasi Selesai</p>
-                  <p className="text-green-800">2-5 menit</p>
+                  <p className="text-gray-600 font-medium">Estimasi Selesai</p>
+                  <p className="text-black">2-5 menit</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-3 flex items-center">
-                <Shield className="h-5 w-5 mr-2" />
-                Proses Analisis Otomatis
-              </h4>
-              <div className="space-y-3 text-sm text-blue-700">
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Content Fetcher: Mengunduh dan memvalidasi konten
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Frame Extractor: Ekstraksi frame video (2 fps)
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  ResNet-50: Deteksi watermark tersembunyi
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Tesseract OCR: Ekstraksi teks dan URL
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  Graph Analytics: Analisis jaringan distribusi
-                </div>
+            <div className="border-l-4 border-black pl-4 py-2">
+              <h4 className="font-semibold text-black mb-2">Proses Analisis</h4>
+              <div className="space-y-2 text-sm text-gray-600">
+                <div>• Content Fetcher: Mengunduh dan memvalidasi konten</div>
+                <div>• Frame Extractor: Ekstraksi frame video (2 fps)</div>
+                <div>• ResNet-50: Deteksi watermark tersembunyi</div>
+                <div>• OCR Analysis: Ekstraksi teks dan analisis jaringan</div>
               </div>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex gap-3">
               <Link href="/" className="flex-1">
-                <Button className="w-full">
+                <Button variant="outline" className="w-full">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Kembali ke Beranda
                 </Button>
               </Link>
               <Link href="/report" className="flex-1">
-                <Button variant="outline" className="w-full bg-transparent">
+                <Button className="w-full bg-black hover:bg-gray-800">
                   <FileText className="h-4 w-4 mr-2" />
                   Lapor Lagi
                 </Button>
@@ -126,47 +115,51 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100">
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Kembali ke Beranda
-          </Link>
-        </div>
-
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Laporkan Konten Judi Online</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Bantu kami mendeteksi dan melacak iklan judi online dengan melaporkan konten mencurigakan. Sistem AI kami
-            akan menganalisis konten menggunakan <strong>ResNet-50</strong> dan <strong>Tesseract OCR</strong>, kemudian
-            menyimpannya sebagai bukti forensik digital yang sah.
+    <div className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <Link href="/" className="inline-flex items-center text-gray-600 hover:text-black">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Kembali ke Beranda
+            </Link>
+            <div className="flex items-center space-x-3">
+              <Image src="/images/jejakjudi.png" alt="JejakJudi" width={32} height={32} />
+              <div>
+                <h2 className="text-lg font-bold text-black">JejakJudi</h2>
+                <p className="text-xs text-gray-600">Detektif Digital Anti-Judi</p>
+              </div>
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-black mb-2">Laporkan Konten</h1>
+          <p className="text-gray-600 max-w-2xl">
+            Bantu kami mendeteksi dan melacak iklan judi online dengan melaporkan konten mencurigakan. 
+            Sistem AI akan menganalisis konten menggunakan teknologi machine learning.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Form */}
           <div className="lg:col-span-2">
-            <Alert className="mb-6 border-amber-200 bg-amber-50">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-amber-800">
+            <Alert className="mb-6 border-gray-200 bg-gray-50">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
                 <strong>Penting:</strong> Pastikan konten yang dilaporkan bersifat publik dan tidak melanggar privasi.
-                Sistem hanya akan menganalisis metadata dan konten yang dapat diakses secara umum sesuai standar ISO/IEC
-                27043.
               </AlertDescription>
             </Alert>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Shield className="h-6 w-6 mr-2 text-blue-600" />
-                  Form Pelaporan Konten
+            <Card className="shadow-sm border-gray-200">
+              <CardHeader className="border-b">
+                <CardTitle className="flex items-center text-xl">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Form Pelaporan
                 </CardTitle>
                 <CardDescription>
                   Isi informasi di bawah ini untuk melaporkan konten yang mengandung iklan judi online
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Reporter Information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -211,7 +204,7 @@ export default function ReportPage() {
                   {/* Platform & Content Type */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="platform">Platform Media Sosial *</Label>
+                      <Label htmlFor="platform">Platform *</Label>
                       <Select
                         value={formData.platform}
                         onValueChange={(value) => setFormData({ ...formData, platform: value })}
@@ -256,27 +249,27 @@ export default function ReportPage() {
                     <Label>Metode Pelaporan *</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Card
-                        className={`cursor-pointer transition-all ${reportType === "upload" ? "ring-2 ring-blue-500 bg-blue-50 border-blue-200" : "hover:bg-gray-50 border-gray-200"}`}
+                        className={`cursor-pointer transition-all hover:shadow-md ${reportType === "upload" ? "ring-2 ring-black bg-gray-50" : "border-gray-200"}`}
                         onClick={() => setReportType("upload")}
                       >
-                        <CardHeader className="text-center pb-4">
-                          <Upload className="h-12 w-12 mx-auto text-blue-600 mb-2" />
-                          <CardTitle className="text-lg">Upload File</CardTitle>
+                        <CardHeader className="text-center p-4">
+                          <Upload className="h-10 w-10 mx-auto text-black mb-2" />
+                          <CardTitle className="text-base">Upload File</CardTitle>
                           <CardDescription className="text-sm">
-                            Upload gambar atau video yang mengandung iklan judi (Max 15MB)
+                            Upload gambar atau video (Max 15MB)
                           </CardDescription>
                         </CardHeader>
                       </Card>
 
                       <Card
-                        className={`cursor-pointer transition-all ${reportType === "url" ? "ring-2 ring-green-500 bg-green-50 border-green-200" : "hover:bg-gray-50 border-gray-200"}`}
+                        className={`cursor-pointer transition-all hover:shadow-md ${reportType === "url" ? "ring-2 ring-black bg-gray-50" : "border-gray-200"}`}
                         onClick={() => setReportType("url")}
                       >
-                        <CardHeader className="text-center pb-4">
-                          <LinkIcon className="h-12 w-12 mx-auto text-green-600 mb-2" />
-                          <CardTitle className="text-lg">Link URL</CardTitle>
+                        <CardHeader className="text-center p-4">
+                          <Link2 className="h-10 w-10 mx-auto text-black mb-2" />
+                          <CardTitle className="text-base">Link URL</CardTitle>
                           <CardDescription className="text-sm">
-                            Berikan link ke postingan atau konten mencurigakan
+                            Berikan link ke postingan mencurigakan
                           </CardDescription>
                         </CardHeader>
                       </Card>
@@ -286,22 +279,19 @@ export default function ReportPage() {
                   {/* Upload Section */}
                   {reportType === "upload" && (
                     <div className="space-y-4">
-                      <Label htmlFor="file">Upload File Bukti *</Label>
-                      <div className="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors bg-blue-50">
-                        <div className="flex justify-center space-x-4 mb-4">
-                          <Camera className="h-8 w-8 text-blue-500" />
-                          <Video className="h-8 w-8 text-blue-500" />
-                        </div>
-                        <p className="text-blue-700 mb-2 font-medium">Klik untuk upload atau drag & drop</p>
-                        <p className="text-sm text-blue-600 mb-4">
-                          Gambar: JPG, PNG, WEBP | Video: MP4, MOV, AVI (Max 15MB, 180 detik)
+                      <Label htmlFor="file">Upload File *</Label>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                        <Upload className="h-10 w-10 mx-auto text-gray-400 mb-3" />
+                        <p className="text-gray-700 mb-2">Klik untuk upload atau drag & drop</p>
+                        <p className="text-sm text-gray-500 mb-4">
+                          JPG, PNG, WEBP, MP4, MOV (Max 15MB)
                         </p>
-                        <Input type="file" className="mt-4 bg-white" accept="image/*,video/*" />
+                        <Input type="file" className="mt-4" accept="image/*,video/*" />
 
                         {isSubmitting && (
                           <div className="mt-4">
                             <Progress value={uploadProgress} className="w-full" />
-                            <p className="text-sm text-blue-600 mt-2">Mengupload... {uploadProgress}%</p>
+                            <p className="text-sm text-gray-600 mt-2">Uploading... {uploadProgress}%</p>
                           </div>
                         )}
                       </div>
@@ -315,58 +305,54 @@ export default function ReportPage() {
                       <Input
                         id="url"
                         type="url"
-                        placeholder="https://instagram.com/p/... atau https://tiktok.com/@user/video/..."
+                        placeholder="https://instagram.com/p/..."
                         value={formData.url}
                         onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                        className="text-sm"
                         required
                       />
                       <p className="text-sm text-gray-500">
-                        <strong>Pastikan link dapat diakses secara publik.</strong> Sistem akan menggunakan headless
-                        browser untuk mengambil screenshot dan HTML dump sesuai standar forensik.
+                        Pastikan link dapat diakses secara publik
                       </p>
                     </div>
                   )}
 
                   {/* Description */}
                   <div className="space-y-2">
-                    <Label htmlFor="description">Deskripsi Detail</Label>
+                    <Label htmlFor="description">Deskripsi</Label>
                     <Textarea
                       id="description"
-                      placeholder="Jelaskan mengapa konten ini mencurigakan, pola yang Anda temukan, atau informasi tambahan yang relevan..."
+                      placeholder="Jelaskan mengapa konten ini mencurigakan..."
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      rows={4}
+                      rows={3}
                       className="resize-none"
                     />
                   </div>
 
                   {/* Contact */}
                   <div className="space-y-2">
-                    <Label htmlFor="contact">Kontak untuk Update Status</Label>
+                    <Label htmlFor="contact">Email Notifikasi (opsional)</Label>
                     <Input
                       id="contact"
                       type="email"
-                      placeholder="email@example.com (opsional)"
+                      placeholder="email@example.com"
                       value={formData.contact}
                       onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                     />
-                    <p className="text-sm text-gray-500">
-                      Email untuk menerima notifikasi status analisis dan hasil deteksi AI
-                    </p>
                   </div>
 
-                  <Button type="submit" className="w-full py-3 text-lg" disabled={!reportType || isSubmitting}>
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-black hover:bg-gray-800" 
+                    disabled={!reportType || isSubmitting}
+                  >
                     {isSubmitting ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         Mengirim Laporan...
                       </>
                     ) : (
-                      <>
-                        <Shield className="h-5 w-5 mr-2" />
-                        Kirim Laporan ke Sistem AI
-                      </>
+                      "Kirim Laporan"
                     )}
                   </Button>
                 </form>
@@ -374,104 +360,70 @@ export default function ReportPage() {
             </Card>
           </div>
 
-          {/* Sidebar Info */}
+          {/* Sidebar */}
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Proses Analisis AI</CardTitle>
+            <Card className="shadow-sm border-gray-200">
+              <CardHeader className="border-b">
+                <CardTitle className="text-lg">Proses Analisis</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="p-4">
                 <div className="space-y-3 text-sm">
                   <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-blue-600">1</span>
-                    </div>
+                    <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
                     <div>
-                      <p className="font-medium">Content Fetcher</p>
-                      <p className="text-gray-600">Unduh dan validasi konten</p>
+                      <p className="font-medium text-black">Content Validation</p>
+                      <p className="text-gray-600">Validasi dan unduh konten</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-green-600">2</span>
-                    </div>
+                    <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
                     <div>
-                      <p className="font-medium">Frame Extraction</p>
-                      <p className="text-gray-600">Ekstrak frame video (2 fps)</p>
+                      <p className="font-medium text-black">AI Detection</p>
+                      <p className="text-gray-600">Deteksi watermark dengan ResNet-50</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-purple-600">3</span>
-                    </div>
+                    <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
                     <div>
-                      <p className="font-medium">ResNet-50 Detection</p>
-                      <p className="text-gray-600">Deteksi watermark tersembunyi</p>
+                      <p className="font-medium text-black">Text Analysis</p>
+                      <p className="text-gray-600">OCR dan analisis konten</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-orange-600">4</span>
-                    </div>
+                    <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold">4</div>
                     <div>
-                      <p className="font-medium">OCR & Graph Analysis</p>
-                      <p className="text-gray-600">Ekstraksi teks dan analisis jaringan</p>
+                      <p className="font-medium text-black">Report Generation</p>
+                      <p className="text-gray-600">Generate bukti forensik</p>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Statistik Sistem</CardTitle>
+            <Card className="shadow-sm border-gray-200">
+              <CardHeader className="border-b">
+                <CardTitle className="text-lg">Statistik</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="p-4">
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">2,847</div>
+                    <div className="text-xl font-bold text-black">2,847</div>
                     <p className="text-xs text-gray-600">Total Laporan</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-600">94.2%</div>
+                    <div className="text-xl font-bold text-black">94.2%</div>
                     <p className="text-xs text-gray-600">Akurasi AI</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-purple-600">1,234</div>
-                    <p className="text-xs text-gray-600">Watermark Terdeteksi</p>
+                    <div className="text-xl font-bold text-black">1,234</div>
+                    <p className="text-xs text-gray-600">Konten Terdeteksi</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-red-600">567</div>
-                    <p className="text-xs text-gray-600">Akun Teridentifikasi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Keamanan Data</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <Shield className="h-4 w-4 text-green-600 mr-2" />
-                    <span>Enkripsi KMS Google Cloud</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Shield className="h-4 w-4 text-green-600 mr-2" />
-                    <span>Chain of Custody Blockchain</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Shield className="h-4 w-4 text-green-600 mr-2" />
-                    <span>Standar ISO/IEC 27043</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Shield className="h-4 w-4 text-green-600 mr-2" />
-                    <span>Hash SHA-3 Verification</span>
+                    <div className="text-xl font-bold text-black">567</div>
+                    <p className="text-xs text-gray-600">Akun Diblokir</p>
                   </div>
                 </div>
               </CardContent>

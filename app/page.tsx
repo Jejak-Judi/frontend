@@ -1,30 +1,89 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { AlertTriangle, FileText, Network, Shield, Eye } from "lucide-react"
+import { AlertTriangle, FileText, Network, Shield, Eye, CheckCircle, TrendingUp } from "lucide-react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+//image
+import Image from "next/image"
 
 export default function HomePage() {
+  const [isVisible, setIsVisible] = useState(false)
+  const [counters, setCounters] = useState({
+    accuracy: 0,
+    dataset: 0,
+    reports: 0,
+    blocked: 0
+  })
+
+  useEffect(() => {
+    setIsVisible(true)
+    
+    // Animated counters
+    const timer = setTimeout(() => {
+      const animateCounter = (target: number, key: string, duration = 2000) => {
+        let start = 0
+        const increment = target / (duration / 16)
+        
+        const counter = setInterval(() => {
+          start += increment
+          if (start >= target) {
+            start = target
+            clearInterval(counter)
+          }
+          
+          setCounters(prev => ({
+            ...prev,
+            [key]: Math.floor(start)
+          }))
+        }, 16)
+      }
+      
+      animateCounter(92, 'accuracy')
+      animateCounter(25000, 'dataset')
+      animateCounter(10000, 'reports')
+      animateCounter(3800000, 'blocked')
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+'
+    if (num >= 1000) return (num / 1000).toFixed(0) + 'K+'
+    return num.toString()
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-black opacity-5 rounded-full blur-3xl animate-pulse transform -translate-y-40 translate-x-40"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-black opacity-5 rounded-full blur-3xl animate-pulse transform translate-y-40 -translate-x-40"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <Shield className="h-8 w-8 text-blue-600" />
+      <header className="relative border-b bg-white bg-opacity-80 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className={`flex items-center space-x-3 transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : 'opacity-0 transform -translate-x-10'}`}>
+              
+                <Image src="/images/jejakjudi.png" alt="JejakJudi" width={48} height={48} />
+
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">JejakJudi</h1>
-                <p className="text-xs text-gray-500">Detektif Digital Anti-Judi Online</p>
+                <h1 className="text-2xl font-bold text-black">JejakJudi</h1>
+                <p className="text-sm text-gray-600 font-medium">Detektif Digital Anti-Judi Online</p>
               </div>
             </div>
-            <nav className="flex items-center space-x-6">
-              <Link href="/report" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <nav className={`flex items-center space-x-6 transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : 'opacity-0 transform translate-x-10'}`}>
+              <Link href="/report" className="text-gray-600 hover:text-black transition-colors font-medium relative group">
                 Laporkan Konten
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"></span>
               </Link>
               <Link href="/admin/login">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:bg-black hover:text-white transition-all duration-300">
                   <Eye className="h-4 w-4 mr-2" />
-                  Admin Login
+                  Admin 
                 </Button>
               </Link>
             </nav>
@@ -33,104 +92,132 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-8">
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              Sistem Deteksi & Pelacakan
-              <span className="block text-red-600">Iklan Judi Online</span>
+      <section className="relative py-24 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-10'}`}>
+            <div className="mb-8 inline-flex items-center px-4 py-2 bg-black bg-opacity-5 rounded-full text-sm font-medium text-white">
+              <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+              Teknologi AI Terdepan
+            </div>
+            
+            <h2 className="text-5xl md:text-6xl font-black text-black mb-8 leading-tight">
+              Sistem Deteksi
+              <span className="block text-gray-800">
+                Iklan Judi Online
+              </span>
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Platform berbasis AI dengan teknologi <strong>ResNet-50</strong> dan <strong>Tesseract OCR</strong> untuk
-              mendeteksi watermark tersembunyi, menganalisis jaringan distribusi menggunakan algoritma{" "}
-              <strong>Louvain/Leiden</strong>, dan menghasilkan bukti forensik digital yang sah sesuai standar{" "}
-              <strong>ISO/IEC 27043</strong> untuk penegakan hukum.
+            
+            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
+              Platform AI canggih untuk mendeteksi watermark tersembunyi dan menganalisis 
+              jaringan distribusi konten judi ilegal dengan akurasi tinggi
             </p>
-          </div>
 
-          <div className="flex justify-center space-x-6 mb-12">
-            <Link href="/report">
-              <Button size="lg" className="bg-red-600 hover:bg-red-700 px-8 py-4 text-lg">
-                <AlertTriangle className="mr-3 h-6 w-6" />
-                Laporkan Konten Mencurigakan
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-20">
+              <Link href="/report">
+                <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                  <AlertTriangle className="mr-3 h-6 w-6" />
+                  Laporkan Konten
+                </Button>
+              </Link>
+              <Button size="lg" variant="outline" className="border-2 border-black text-black hover:bg-black hover:text-white px-8 py-4 text-lg font-semibold transform hover:-translate-y-1 transition-all duration-300">
+                <FileText className="mr-3 h-6 w-6" />
+                Dokumentasi
               </Button>
-            </Link>
-            <Button size="lg" variant="outline" className="px-8 py-4 text-lg bg-transparent">
-              <FileText className="mr-3 h-6 w-6" />
-              Pelajari Lebih Lanjut
-            </Button>
-          </div>
+            </div>
 
-          {/* Key Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">≥92%</div>
-              <p className="text-sm text-gray-600">Akurasi Deteksi</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">25K+</div>
-              <p className="text-sm text-gray-600">Dataset Training</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">10K</div>
-              <p className="text-sm text-gray-600">Laporan/Hari</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-red-600">3.8M+</div>
-              <p className="text-sm text-gray-600">Situs Terblokir</p>
+            {/* Animated Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className={`text-center p-6 rounded-2xl bg-white bg-opacity-50 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-8'}`}>
+                <TrendingUp className="h-8 w-8 mx-auto mb-3 text-black" />
+                <div className="text-3xl font-black text-black mb-2">
+                  {counters.accuracy}%
+                </div>
+                <p className="text-sm text-gray-600 font-medium">Akurasi Deteksi</p>
+              </div>
+              
+              <div className={`text-center p-6 rounded-2xl bg-white bg-opacity-50 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-8'}`}>
+                <FileText className="h-8 w-8 mx-auto mb-3 text-black" />
+                <div className="text-3xl font-black text-black mb-2">
+                  {formatNumber(counters.dataset)}
+                </div>
+                <p className="text-sm text-gray-600 font-medium">Dataset Training</p>
+              </div>
+              
+              <div className={`text-center p-6 rounded-2xl bg-white bg-opacity-50 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-8'}`}>
+                <AlertTriangle className="h-8 w-8 mx-auto mb-3 text-black" />
+                <div className="text-3xl font-black text-black mb-2">
+                  {formatNumber(counters.reports)}
+                </div>
+                <p className="text-sm text-gray-600 font-medium">Laporan/Hari</p>
+              </div>
+              
+              <div className={`text-center p-6 rounded-2xl bg-white bg-opacity-50 backdrop-blur-sm border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-500 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-8'}`}>
+                <Shield className="h-8 w-8 mx-auto mb-3 text-black" />
+                <div className="text-3xl font-black text-black mb-2">
+                  {formatNumber(counters.blocked)}
+                </div>
+                <p className="text-sm text-gray-600 font-medium">Situs Terblokir</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Problem Statement */}
-      <section className="py-16 bg-red-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-red-800 mb-4">Darurat Digital Indonesia</h3>
-            <p className="text-lg text-red-700 max-w-3xl mx-auto">
-              Indonesia menghadapi krisis judi online dengan perputaran transaksi mencapai{" "}
-              <strong>Rp1.200 triliun</strong>
-              dan <strong>1.066.000 pemain</strong> aktif, 71% diantaranya berpenghasilan di bawah Rp5 juta per bulan.
+      {/* Features Section */}
+      <section className="relative py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-10'}`}>
+            <h3 className="text-4xl font-black text-black mb-6">Fitur Unggulan</h3>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-medium">
+              Teknologi AI dan analisis jaringan untuk deteksi konten judi online yang akurat dan efisien
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="border-red-200 bg-white">
-              <CardHeader>
-                <AlertTriangle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-                <CardTitle className="text-center text-red-800">Watermark Tersembunyi</CardTitle>
+            <Card className={`group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-10'}`}>
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-900 to-black flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <AlertTriangle className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-black group-hover:text-gray-800 transition-colors">
+                  Deteksi Watermark
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-red-700 text-center">
-                  Iklan judi menggunakan watermark dengan opasitas sangat rendah (5-30%) yang lolos dari deteksi
-                  otomatis platform
+                <p className="text-gray-600 leading-relaxed font-medium">
+                  Menggunakan AI machine learning untuk mendeteksi watermark tersembunyi dalam gambar dan video dengan akurasi tinggi
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-red-200 bg-white">
-              <CardHeader>
-                <Network className="h-12 w-12 text-red-600 mx-auto mb-4" />
-                <CardTitle className="text-center text-red-800">Jaringan Terkoordinasi</CardTitle>
+            <Card className={`group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-10'}`}>
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-black to-gray-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Network className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-black group-hover:text-gray-800 transition-colors">
+                  Analisis Jaringan
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-red-700 text-center">
-                  Sindikat menggunakan jaringan akun yang saling terhubung untuk menyebarkan konten secara masif dan
-                  terstruktur
+                <p className="text-gray-600 leading-relaxed font-medium">
+                  Visualisasi dan analisis mendalam jaringan distribusi konten untuk mengidentifikasi pola dan sumber penyebaran
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-red-200 bg-white">
-              <CardHeader>
-                <Shield className="h-12 w-12 text-red-600 mx-auto mb-4" />
-                <CardTitle className="text-center text-red-800">Bukti Digital Lemah</CardTitle>
+            <Card className={`group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${isVisible ? 'translate-y-0 opacity-100' : 'opacity-0 transform translate-y-10'}`}>
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Shield className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-black group-hover:text-gray-800 transition-colors">
+                  Bukti Forensik
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-red-700 text-center">
-                  Kurangnya chain of custody yang sah menyebabkan banyak kasus gagal di pengadilan karena bukti tidak
-                  valid
+                <p className="text-gray-600 leading-relaxed font-medium">
+                  Menghasilkan bukti digital yang sah dan dapat dipertanggungjawabkan untuk keperluan hukum dan penegakan
                 </p>
               </CardContent>
             </Card>
@@ -138,217 +225,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Technical Solution */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Solusi Teknologi Canggih</h3>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              JejakJudi menggunakan kombinasi AI, analisis jaringan, dan blockchain untuk memberantas judi online secara
-              komprehensif
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center border-2 hover:border-blue-500 transition-colors">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertTriangle className="h-8 w-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-lg">Deteksi AI</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  ResNet-50 + OpenCV untuk deteksi watermark dengan preprocessing CLAHE, bilateral filter, dan unsharp
-                  mask
-                </p>
-                <div className="text-xs text-blue-600 font-medium">Patch 256×256 • Stride 128 • Threshold 0.80</div>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-2 hover:border-green-500 transition-colors">
-              <CardHeader>
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText className="h-8 w-8 text-green-600" />
-                </div>
-                <CardTitle className="text-lg">OCR Ekstraksi</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Tesseract v5 fine-tuned untuk Bahasa Indonesia dan Inggris dengan confidence scoring
-                </p>
-                <div className="text-xs text-green-600 font-medium">
-                  URL Detection • WA/Telegram • Domain Extraction
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-2 hover:border-purple-500 transition-colors">
-              <CardHeader>
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Network className="h-8 w-8 text-purple-600" />
-                </div>
-                <CardTitle className="text-lg">Analisis Graf</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  NetworkX dengan algoritma Louvain/Leiden untuk deteksi komunitas dan betweenness centrality
-                </p>
-                <div className="text-xs text-purple-600 font-medium">
-                  Bipartite Graph • Community Detection • Key Actors
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-2 hover:border-orange-500 transition-colors">
-              <CardHeader>
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="h-8 w-8 text-orange-600" />
-                </div>
-                <CardTitle className="text-lg">Chain of Custody</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Hyperledger Fabric blockchain untuk immutable evidence vault dengan SHA-3 hashing
-                </p>
-                <div className="text-xs text-orange-600 font-medium">
-                  ISO/IEC 27043 • Forensic Ready • Court Admissible
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+      {/* CTA Section */}
+      <section className="relative py-20 bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-11.046-8.954-20-20-20v20h20z'/%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
         </div>
-      </section>
-
-      {/* Architecture Overview */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Arsitektur Microservices</h3>
-            <p className="text-lg text-gray-600">
-              Dibangun di atas Google Cloud Platform dengan skalabilitas dan keandalan tinggi
-            </p>
-          </div>
-
-          <div className="bg-white rounded-lg p-8 shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-gray-900 flex items-center">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                  Ingestion Layer
-                </h4>
-                <div className="text-sm text-gray-600 space-y-2">
-                  <div>• Cloud API Gateway</div>
-                  <div>• Cloud Functions (Validasi)</div>
-                  <div>• Pub/Sub Messaging</div>
-                  <div>• Content Fetcher (Cloud Run)</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-semibold text-gray-900 flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  Processing Engine
-                </h4>
-                <div className="text-sm text-gray-600 space-y-2">
-                  <div>• Vertex AI Pipelines</div>
-                  <div>• Frame Extractor (FFmpeg)</div>
-                  <div>• Detection Engine (PyTorch)</div>
-                  <div>• Graph Analytics (NetworkX)</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-semibold text-gray-900 flex items-center">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
-                  Evidence Vault
-                </h4>
-                <div className="text-sm text-gray-600 space-y-2">
-                  <div>• Cloud Storage (KMS Encrypted)</div>
-                  <div>• Hyperledger Fabric</div>
-                  <div>• Cloud SQL (Metadata)</div>
-                  <div>• Forensic PDF Generator</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-3xl font-bold text-white mb-6">Bergabunglah dalam Memerangi Judi Online</h3>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Setiap laporan Anda membantu membangun Indonesia digital yang bersih dan aman. Sistem kami akan menganalisis
-            konten secara otomatis dan menghasilkan bukti forensik yang sah.
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-4xl font-black mb-6">Bergabunglah dalam Pemberantasan Judi Online</h3>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-medium">
+            Laporkan konten mencurigakan dan bantu kami menciptakan internet yang lebih aman
           </p>
-          <div className="flex justify-center space-x-4">
-            <Link href="/report">
-              <Button size="lg" variant="secondary" className="px-8 py-4 text-lg">
-                <AlertTriangle className="mr-3 h-6 w-6" />
-                Mulai Melaporkan
-              </Button>
-            </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="px-8 py-4 text-lg border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
-            >
-              <FileText className="mr-3 h-6 w-6" />
-              Panduan Lengkap
+          <Link href="/report">
+            <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg font-semibold transform hover:-translate-y-1 transition-all duration-300">
+              <AlertTriangle className="mr-3 h-6 w-6" />
+              Mulai Laporkan Sekarang
             </Button>
-          </div>
+          </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <Shield className="h-8 w-8 text-blue-400" />
-                <div>
-                  <h3 className="text-xl font-bold">JejakJudi</h3>
-                  <p className="text-sm text-gray-400">Detektif Digital Anti-Judi Online</p>
+      <footer className="bg-gray-50 border-t">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {/* Brand */}
+              <div className="col-span-1 md:col-span-2">
+                <div className="flex items-center space-x-3 mb-4">
+              
+                    <Image src="/images/jejakjudi.png" alt="JejakJudi" width={20} height={20} />
+                
+                  <h3 className="text-xl font-bold text-black">JejakJudi</h3>
                 </div>
+                <p className="text-gray-600 mb-4 max-w-md">
+                  Platform AI untuk mendeteksi dan melacak iklan judi online. Dikembangkan untuk GEMASTIK XVIII 2025 oleh tim Universitas Andalas.
+                </p>
               </div>
-              <p className="text-gray-400 mb-4 max-w-md">
-                Dikembangkan untuk GEMASTIK XVIII 2025 dengan tema "Pengembangan TIK untuk Mendukung Kemandirian Bangsa"
-              </p>
-              <div className="text-sm text-gray-500">
-                <p>Universitas Andalas - Fakultas Teknologi Informasi</p>
-                <p>Departemen Sistem Informasi</p>
+              
+              {/* Links */}
+              <div>
+                <h4 className="font-semibold text-black mb-4">Platform</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">Laporkan Konten</a></li>
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">Dokumentasi</a></li>
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">API</a></li>
+                </ul>
               </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Teknologi</h4>
-              <div className="space-y-2 text-sm text-gray-400">
-                <div>ResNet-50 + OpenCV</div>
-                <div>Tesseract OCR</div>
-                <div>NetworkX + Louvain</div>
-                <div>Hyperledger Fabric</div>
-                <div>Google Cloud Platform</div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Kontak</h4>
-              <div className="space-y-2 text-sm text-gray-400">
-                <div>Tim Pengembang</div>
-                <div>M. Nouval Habibie</div>
-                <div>Benni Putra Chaniago</div>
-                <div>Aqima Adalahita</div>
+              
+              {/* Support */}
+              <div>
+                <h4 className="font-semibold text-black mb-4">Dukungan</h4>
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">Bantuan</a></li>
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">Kontak</a></li>
+                  <li><a href="#" className="text-gray-600 hover:text-black transition-colors">FAQ</a></li>
+                </ul>
               </div>
             </div>
           </div>
-
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>
-              © 2025 JejakJudi. Dikembangkan untuk memberantas judi online dan membangun Indonesia digital yang bersih.
-            </p>
+          
+          {/* Bottom */}
+          <div className="border-t py-6">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-500 text-sm">
+                © 2025 JejakJudi. Sistem deteksi iklan judi online.
+              </p>
+              <div className="flex space-x-6 mt-4 md:mt-0">
+                <a href="#" className="text-gray-500 hover:text-black text-sm transition-colors">Privasi</a>
+                <a href="#" className="text-gray-500 hover:text-black text-sm transition-colors">Syarat</a>
+                <a href="#" className="text-gray-500 hover:text-black text-sm transition-colors">Kebijakan</a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

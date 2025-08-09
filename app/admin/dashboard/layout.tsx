@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar"
 import { BarChart3, Shield, Network, Eye, Database, LogOut, Users } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
@@ -84,7 +85,8 @@ export default function AdminLayout({
         <Sidebar className="border-r border-slate-200">
           <SidebarHeader className="border-b border-slate-200 p-4">
             <div className="flex items-center space-x-3">
-              <Shield className="h-8 w-8 text-blue-600" />
+              {/* <Shield className="h-8 w-8 text-blue-600" /> */}
+              <Image src="/images/jejakjudi.png" alt="JejakJudi" width={32} height={32} />
               <div>
                 <h2 className="font-bold text-slate-900">JejakJudi Admin</h2>
                 <p className="text-xs text-slate-500">Detektif Digital System</p>

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Shield, Eye, EyeOff, AlertTriangle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -41,32 +42,32 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <Shield className="h-12 w-12 text-blue-400" />
+            <Image src="/images/jejakjudi.png" alt="JejakJudi" width={48} height={48} />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">JejakJudi Admin</h1>
-          <p className="text-slate-300">Sistem Detektif Digital Anti-Judi Online</p>
+          <h1 className="text-3xl font-bold text-black mb-2">JejakJudi Admin</h1>
+          <p className="text-gray-600">Sistem Detektif Digital Anti-Judi Online</p>
         </div>
 
-        <Card className="border-slate-600 bg-slate-800/50 backdrop-blur">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-white">Login Administrator</CardTitle>
-            <CardDescription className="text-slate-300">Akses dashboard analisis dan manajemen sistem</CardDescription>
+            <CardTitle>Login Administrator</CardTitle>
+            <CardDescription>Akses dashboard analisis dan manajemen sistem</CardDescription>
           </CardHeader>
           <CardContent>
             {error && (
-              <Alert className="mb-4 border-red-600 bg-red-900/20">
-                <AlertTriangle className="h-4 w-4 text-red-400" />
-                <AlertDescription className="text-red-300">{error}</AlertDescription>
+              <Alert className="mb-4">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-slate-200">
+                <Label htmlFor="username">
                   Username
                 </Label>
                 <Input
@@ -75,13 +76,12 @@ export default function AdminLoginPage() {
                   placeholder="Masukkan username"
                   value={credentials.username}
                   onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-200">
+                <Label htmlFor="password">
                   Password
                 </Label>
                 <div className="relative">
@@ -91,14 +91,14 @@ export default function AdminLoginPage() {
                     placeholder="Masukkan password"
                     value={credentials.password}
                     onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                    className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 pr-10"
+                    className="pr-10"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-slate-400 hover:text-white"
+                    className="absolute right-0 top-0 h-full px-3"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -106,34 +106,34 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
                     Memverifikasi...
                   </>
                 ) : (
                   <>
-                    <Shield className="h-4 w-4 mr-2" />
-                    Login ke Dashboard
+                    {/* <Shield className="h-4 w-4 mr-2" /> */}
+                    Login
                   </>
                 )}
               </Button>
             </form>
 
-            <div className="mt-6 p-4 bg-slate-700/50 rounded-lg">
-              <p className="text-xs text-slate-300 mb-2">Demo Credentials:</p>
-              <p className="text-xs text-slate-400">
-                Username: <span className="text-white">admin</span>
+            {/* <div className="mt-6 p-4 border rounded-lg bg-gray-50">
+              <p className="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</p>
+              <p className="text-sm text-gray-600">
+                Username: <span className="font-mono font-medium text-black">admin</span>
               </p>
-              <p className="text-xs text-slate-400">
-                Password: <span className="text-white">jejakjudi2025</span>
+              <p className="text-sm text-gray-600">
+                Password: <span className="font-mono font-medium text-black">jejakjudi2025</span>
               </p>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6 text-slate-400 text-sm">
+        <div className="text-center mt-6 text-gray-500 text-sm">
           <p>© 2025 JejakJudi - GEMASTIK XVIII</p>
           <p>Universitas Andalas</p>
         </div>

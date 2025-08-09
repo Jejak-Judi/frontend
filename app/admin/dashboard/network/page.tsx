@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,176 +8,854 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Network, Download, Filter, Eye, TrendingUp } from "lucide-react"
 
-// Data dummy untuk network graph
+// Data dummy untuk network graph - diperbaharui untuk pola yang lebih bagus
 const networkData = {
   nodes: [
-    // Akun nodes
+    // Community 1 - Slot Online Network (High Activity)
     {
-      id: "acc_slot88",
+      id: "acc_slot_king",
       type: "account",
       platform: "IG",
-      username: "slot88_gacor",
-      followers: 45000,
-      centrality: 0.42,
+      username: "slot_king88",
+      followers: 85000,
+      centrality: 0.78,
       community: "COMM_1",
     },
     {
-      id: "acc_maxwin",
+      id: "acc_gacor_master",
       type: "account",
       platform: "TT",
-      username: "gacor_maxwin",
-      followers: 32000,
+      username: "gacor_master",
+      followers: 62000,
+      centrality: 0.65,
+      community: "COMM_1",
+    },
+    {
+      id: "acc_slot_pro",
+      type: "account",
+      platform: "IG",
+      username: "slot_pro_777",
+      followers: 45000,
+      centrality: 0.58,
+      community: "COMM_1",
+    },
+    {
+      id: "acc_bonus_hunter",
+      type: "account",
+      platform: "TT",
+      username: "bonus_hunter",
+      followers: 38000,
+      centrality: 0.52,
+      community: "COMM_1",
+    },
+    {
+      id: "acc_slot_viral",
+      type: "account",
+      platform: "YT",
+      username: "slot_viral_id",
+      followers: 28000,
+      centrality: 0.45,
+      community: "COMM_1",
+    },
+    {
+      id: "acc_maxwin_daily",
+      type: "account",
+      platform: "IG",
+      username: "maxwin_daily",
+      followers: 22000,
       centrality: 0.38,
       community: "COMM_1",
     },
+
+    // Community 2 - Togel & Lottery Network (Medium Activity)
     {
-      id: "acc_bonus",
+      id: "acc_togel_master",
       type: "account",
       platform: "IG",
-      username: "bonus_member",
-      followers: 28000,
-      centrality: 0.35,
-      community: "COMM_1",
-    },
-    {
-      id: "acc_togel1",
-      type: "account",
-      platform: "IG",
-      username: "togel_hoki",
-      followers: 25000,
-      centrality: 0.32,
+      username: "togel_master_hk",
+      followers: 55000,
+      centrality: 0.62,
       community: "COMM_2",
     },
     {
-      id: "acc_togel2",
-      type: "account",
-      platform: "YT",
-      username: "prediksi_jitu",
-      followers: 18000,
-      centrality: 0.28,
-      community: "COMM_2",
-    },
-    {
-      id: "acc_casino1",
-      type: "account",
-      platform: "IG",
-      username: "live_casino",
-      followers: 22000,
-      centrality: 0.25,
-      community: "COMM_3",
-    },
-    {
-      id: "acc_casino2",
+      id: "acc_prediksi_pro",
       type: "account",
       platform: "TT",
-      username: "dealer_cantik",
-      followers: 15000,
-      centrality: 0.22,
+      username: "prediksi_pro",
+      followers: 42000,
+      centrality: 0.55,
+      community: "COMM_2",
+    },
+    {
+      id: "acc_angka_jitu",
+      type: "account",
+      platform: "YT",
+      username: "angka_jitu_sgp",
+      followers: 35000,
+      centrality: 0.48,
+      community: "COMM_2",
+    },
+    {
+      id: "acc_togel_viral",
+      type: "account",
+      platform: "IG",
+      username: "togel_viral_88",
+      followers: 29000,
+      centrality: 0.42,
+      community: "COMM_2",
+    },
+    {
+      id: "acc_shio_expert",
+      type: "account",
+      platform: "TT",
+      username: "shio_expert",
+      followers: 18000,
+      centrality: 0.35,
+      community: "COMM_2",
+    },
+
+    // Community 3 - Casino Live Network (Lower Activity)
+    {
+      id: "acc_live_casino",
+      type: "account",
+      platform: "IG",
+      username: "live_casino_id",
+      followers: 48000,
+      centrality: 0.58,
       community: "COMM_3",
     },
     {
-      id: "acc_jackpot",
+      id: "acc_dealer_cantik",
+      type: "account",
+      platform: "TT",
+      username: "dealer_cantik_88",
+      followers: 32000,
+      centrality: 0.45,
+      community: "COMM_3",
+    },
+    {
+      id: "acc_jackpot_king",
       type: "account",
       platform: "IG",
-      username: "jackpot_besar",
-      followers: 12000,
-      centrality: 0.18,
+      username: "jackpot_king",
+      followers: 25000,
+      centrality: 0.38,
+      community: "COMM_3",
+    },
+    {
+      id: "acc_casino_viral",
+      type: "account",
+      platform: "YT",
+      username: "casino_viral",
+      followers: 19000,
+      centrality: 0.32,
       community: "COMM_3",
     },
 
-    // Content nodes
+    // Community 4 - Sports Betting Network (New)
     {
-      id: "cont_slot1",
+      id: "acc_sportsbet_pro",
+      type: "account",
+      platform: "IG",
+      username: "sportsbet_pro",
+      followers: 39000,
+      centrality: 0.52,
+      community: "COMM_4",
+    },
+    {
+      id: "acc_soccer_bet",
+      type: "account",
+      platform: "TT",
+      username: "soccer_bet_id",
+      followers: 28000,
+      centrality: 0.45,
+      community: "COMM_4",
+    },
+    {
+      id: "acc_odds_master",
+      type: "account",
+      platform: "YT",
+      username: "odds_master",
+      followers: 21000,
+      centrality: 0.38,
+      community: "COMM_4",
+    },
+
+    // Bridge/Connector Accounts (Cross-community)
+    {
+      id: "acc_gambling_hub",
+      type: "account",
+      platform: "IG",
+      username: "gambling_hub_id",
+      followers: 78000,
+      centrality: 0.85,
+      community: "COMM_BRIDGE",
+    },
+    {
+      id: "acc_betting_news",
+      type: "account",
+      platform: "TT",
+      username: "betting_news",
+      followers: 52000,
+      centrality: 0.72,
+      community: "COMM_BRIDGE",
+    },
+
+    // Content nodes - lebih banyak dan beragam
+    {
+      id: "cont_slot_promo1",
       type: "content",
       hash: "sha3:abc123",
       platform: "IG",
-      watermarks: 3,
-      ocrText: "SLOT88 BONUS NEW MEMBER",
+      watermarks: 5,
+      ocrText: "SLOT88 BONUS NEW MEMBER 100%",
     },
     {
-      id: "cont_slot2",
+      id: "cont_slot_promo2",
       type: "content",
       hash: "sha3:def456",
       platform: "TT",
-      watermarks: 2,
-      ocrText: "GACOR MAXWIN HARI INI",
+      watermarks: 4,
+      ocrText: "GACOR MAXWIN HARI INI SLOT",
     },
     {
-      id: "cont_togel1",
+      id: "cont_slot_viral",
       type: "content",
       hash: "sha3:ghi789",
-      platform: "IG",
-      watermarks: 1,
-      ocrText: "TOGEL HONGKONG PREDIKSI",
+      platform: "YT",
+      watermarks: 3,
+      ocrText: "VIRAL JACKPOT 500 JUTA",
     },
     {
-      id: "cont_casino1",
+      id: "cont_togel_hk",
       type: "content",
       hash: "sha3:jkl012",
       platform: "IG",
+      watermarks: 2,
+      ocrText: "TOGEL HONGKONG PREDIKSI HARI INI",
+    },
+    {
+      id: "cont_togel_sgp",
+      type: "content",
+      hash: "sha3:mno345",
+      platform: "TT",
+      watermarks: 3,
+      ocrText: "SINGAPORE POOLS ANGKA JITU",
+    },
+    {
+      id: "cont_casino_live",
+      type: "content",
+      hash: "sha3:pqr678",
+      platform: "IG",
       watermarks: 4,
-      ocrText: "LIVE CASINO DEALER CANTIK",
+      ocrText: "LIVE CASINO DEALER CANTIK 24 JAM",
+    },
+    {
+      id: "cont_jackpot_casino",
+      type: "content",
+      hash: "sha3:stu901",
+      platform: "YT",
+      watermarks: 2,
+      ocrText: "JACKPOT CASINO 1 MILIAR",
+    },
+    {
+      id: "cont_sports_bet",
+      type: "content",
+      hash: "sha3:vwx234",
+      platform: "IG",
+      watermarks: 3,
+      ocrText: "TARUHAN BOLA ODDS TERBAIK",
+    },
+    {
+      id: "cont_soccer_tips",
+      type: "content",
+      hash: "sha3:yzab567",
+      platform: "TT",
+      watermarks: 1,
+      ocrText: "TIPS JITU TARUHAN SEPAK BOLA",
+    },
+    {
+      id: "cont_promo_mix",
+      type: "content",
+      hash: "sha3:cdef890",
+      platform: "IG",
+      watermarks: 6,
+      ocrText: "PROMO GABUNGAN SLOT TOGEL CASINO",
     },
   ],
   edges: [
-    // Account -> Content relationships
-    { src: "acc_slot88", dst: "cont_slot1", type: "posted", timestamp: "2025-01-09T10:00:00Z", weight: 1 },
-    { src: "acc_maxwin", dst: "cont_slot1", type: "reposted", timestamp: "2025-01-09T10:30:00Z", weight: 0.8 },
-    { src: "acc_bonus", dst: "cont_slot1", type: "reposted", timestamp: "2025-01-09T11:00:00Z", weight: 0.8 },
+    // Slot Community (COMM_1) - Dense internal connections
+    { src: "acc_slot_king", dst: "cont_slot_promo1", type: "posted", timestamp: "2025-01-09T08:00:00Z", weight: 1 },
+    { src: "acc_gacor_master", dst: "cont_slot_promo1", type: "reposted", timestamp: "2025-01-09T08:15:00Z", weight: 0.9 },
+    { src: "acc_slot_pro", dst: "cont_slot_promo1", type: "reposted", timestamp: "2025-01-09T08:30:00Z", weight: 0.8 },
+    { src: "acc_bonus_hunter", dst: "cont_slot_promo1", type: "reposted", timestamp: "2025-01-09T08:45:00Z", weight: 0.7 },
+    
+    { src: "acc_gacor_master", dst: "cont_slot_promo2", type: "posted", timestamp: "2025-01-09T09:00:00Z", weight: 1 },
+    { src: "acc_slot_viral", dst: "cont_slot_promo2", type: "reposted", timestamp: "2025-01-09T09:20:00Z", weight: 0.8 },
+    { src: "acc_maxwin_daily", dst: "cont_slot_promo2", type: "reposted", timestamp: "2025-01-09T09:40:00Z", weight: 0.7 },
+    
+    { src: "acc_slot_viral", dst: "cont_slot_viral", type: "posted", timestamp: "2025-01-09T10:00:00Z", weight: 1 },
+    { src: "acc_slot_king", dst: "cont_slot_viral", type: "reposted", timestamp: "2025-01-09T10:15:00Z", weight: 0.9 },
+    { src: "acc_slot_pro", dst: "cont_slot_viral", type: "reposted", timestamp: "2025-01-09T10:30:00Z", weight: 0.8 },
 
-    { src: "acc_maxwin", dst: "cont_slot2", type: "posted", timestamp: "2025-01-09T12:00:00Z", weight: 1 },
-    { src: "acc_slot88", dst: "cont_slot2", type: "reposted", timestamp: "2025-01-09T12:15:00Z", weight: 0.8 },
+    // Internal slot community cross-references
+    { src: "acc_slot_king", dst: "acc_gacor_master", type: "mention", timestamp: "2025-01-09T11:00:00Z", weight: 0.6 },
+    { src: "acc_gacor_master", dst: "acc_slot_pro", type: "collab", timestamp: "2025-01-09T11:30:00Z", weight: 0.7 },
+    { src: "acc_bonus_hunter", dst: "acc_maxwin_daily", type: "mention", timestamp: "2025-01-09T12:00:00Z", weight: 0.5 },
 
-    { src: "acc_togel1", dst: "cont_togel1", type: "posted", timestamp: "2025-01-09T13:00:00Z", weight: 1 },
-    { src: "acc_togel2", dst: "cont_togel1", type: "reposted", timestamp: "2025-01-09T13:30:00Z", weight: 0.8 },
+    // Togel Community (COMM_2) - Medium density
+    { src: "acc_togel_master", dst: "cont_togel_hk", type: "posted", timestamp: "2025-01-09T13:00:00Z", weight: 1 },
+    { src: "acc_prediksi_pro", dst: "cont_togel_hk", type: "reposted", timestamp: "2025-01-09T13:20:00Z", weight: 0.8 },
+    { src: "acc_angka_jitu", dst: "cont_togel_hk", type: "reposted", timestamp: "2025-01-09T13:40:00Z", weight: 0.7 },
+    
+    { src: "acc_angka_jitu", dst: "cont_togel_sgp", type: "posted", timestamp: "2025-01-09T14:00:00Z", weight: 1 },
+    { src: "acc_togel_viral", dst: "cont_togel_sgp", type: "reposted", timestamp: "2025-01-09T14:25:00Z", weight: 0.8 },
+    { src: "acc_shio_expert", dst: "cont_togel_sgp", type: "reposted", timestamp: "2025-01-09T14:50:00Z", weight: 0.6 },
 
-    { src: "acc_casino1", dst: "cont_casino1", type: "posted", timestamp: "2025-01-09T14:00:00Z", weight: 1 },
-    { src: "acc_casino2", dst: "cont_casino1", type: "reposted", timestamp: "2025-01-09T14:20:00Z", weight: 0.8 },
-    { src: "acc_jackpot", dst: "cont_casino1", type: "reposted", timestamp: "2025-01-09T14:45:00Z", weight: 0.8 },
+    // Casino Community (COMM_3) - Lower density
+    { src: "acc_live_casino", dst: "cont_casino_live", type: "posted", timestamp: "2025-01-09T15:00:00Z", weight: 1 },
+    { src: "acc_dealer_cantik", dst: "cont_casino_live", type: "reposted", timestamp: "2025-01-09T15:30:00Z", weight: 0.8 },
+    
+    { src: "acc_jackpot_king", dst: "cont_jackpot_casino", type: "posted", timestamp: "2025-01-09T16:00:00Z", weight: 1 },
+    { src: "acc_casino_viral", dst: "cont_jackpot_casino", type: "reposted", timestamp: "2025-01-09T16:20:00Z", weight: 0.7 },
+
+    // Sports Betting Community (COMM_4)
+    { src: "acc_sportsbet_pro", dst: "cont_sports_bet", type: "posted", timestamp: "2025-01-09T17:00:00Z", weight: 1 },
+    { src: "acc_soccer_bet", dst: "cont_sports_bet", type: "reposted", timestamp: "2025-01-09T17:15:00Z", weight: 0.8 },
+    { src: "acc_odds_master", dst: "cont_sports_bet", type: "reposted", timestamp: "2025-01-09T17:30:00Z", weight: 0.7 },
+    
+    { src: "acc_soccer_bet", dst: "cont_soccer_tips", type: "posted", timestamp: "2025-01-09T18:00:00Z", weight: 1 },
+    { src: "acc_sportsbet_pro", dst: "cont_soccer_tips", type: "reposted", timestamp: "2025-01-09T18:20:00Z", weight: 0.8 },
+
+    // Bridge connections - Cross-community hub accounts
+    { src: "acc_gambling_hub", dst: "cont_promo_mix", type: "posted", timestamp: "2025-01-09T19:00:00Z", weight: 1 },
+    { src: "acc_slot_king", dst: "cont_promo_mix", type: "reposted", timestamp: "2025-01-09T19:15:00Z", weight: 0.9 },
+    { src: "acc_togel_master", dst: "cont_promo_mix", type: "reposted", timestamp: "2025-01-09T19:30:00Z", weight: 0.8 },
+    { src: "acc_live_casino", dst: "cont_promo_mix", type: "reposted", timestamp: "2025-01-09T19:45:00Z", weight: 0.7 },
+    { src: "acc_sportsbet_pro", dst: "cont_promo_mix", type: "reposted", timestamp: "2025-01-09T20:00:00Z", weight: 0.6 },
+
+    // Inter-community weak connections (bridge ties)
+    { src: "acc_gambling_hub", dst: "acc_slot_king", type: "mention", timestamp: "2025-01-09T20:30:00Z", weight: 0.5 },
+    { src: "acc_gambling_hub", dst: "acc_togel_master", type: "mention", timestamp: "2025-01-09T21:00:00Z", weight: 0.5 },
+    { src: "acc_gambling_hub", dst: "acc_live_casino", type: "collab", timestamp: "2025-01-09T21:30:00Z", weight: 0.6 },
+    { src: "acc_betting_news", dst: "acc_sportsbet_pro", type: "mention", timestamp: "2025-01-09T22:00:00Z", weight: 0.5 },
+    
+    // Cross-community content sharing (creates interesting patterns)
+    { src: "acc_betting_news", dst: "cont_slot_viral", type: "reposted", timestamp: "2025-01-09T22:30:00Z", weight: 0.4 },
+    { src: "acc_slot_pro", dst: "cont_casino_live", type: "reposted", timestamp: "2025-01-09T23:00:00Z", weight: 0.3 },
+    { src: "acc_togel_viral", dst: "cont_sports_bet", type: "reposted", timestamp: "2025-01-09T23:30:00Z", weight: 0.3 },
   ],
 }
 
 const communities = [
   {
     id: "COMM_1",
-    name: "Komunitas Slot Online",
-    members: ["acc_slot88", "acc_maxwin", "acc_bonus"],
-    size: 3,
-    centrality: 0.42,
-    activity: "Tinggi",
+    name: "Jaringan Slot Online",
+    members: ["acc_slot_king", "acc_gacor_master", "acc_slot_pro", "acc_bonus_hunter", "acc_slot_viral", "acc_maxwin_daily"],
+    size: 6,
+    centrality: 0.78,
+    activity: "Sangat Tinggi",
     color: "#ef4444",
-    description: "Jaringan akun yang fokus pada promosi slot online dengan watermark tersembunyi",
+    description: "Jaringan besar akun slot online dengan koneksi internal yang sangat kuat dan distribusi konten viral",
   },
   {
     id: "COMM_2",
-    name: "Jaringan Togel",
-    members: ["acc_togel1", "acc_togel2"],
-    size: 2,
-    centrality: 0.32,
-    activity: "Sedang",
+    name: "Komunitas Togel & Prediksi",
+    members: ["acc_togel_master", "acc_prediksi_pro", "acc_angka_jitu", "acc_togel_viral", "acc_shio_expert"],
+    size: 5,
+    centrality: 0.62,
+    activity: "Tinggi",
     color: "#f97316",
-    description: "Komunitas yang menyebarkan prediksi togel dan link betting",
+    description: "Komunitas prediksi togel dengan fokus pada analisis angka dan ramalan shio",
   },
   {
     id: "COMM_3",
     name: "Grup Casino Live",
-    members: ["acc_casino1", "acc_casino2", "acc_jackpot"],
-    size: 3,
-    centrality: 0.25,
-    activity: "Rendah",
+    members: ["acc_live_casino", "acc_dealer_cantik", "acc_jackpot_king", "acc_casino_viral"],
+    size: 4,
+    centrality: 0.58,
+    activity: "Sedang",
     color: "#eab308",
-    description: "Jaringan promosi casino live dengan fokus pada dealer dan jackpot",
+    description: "Jaringan promosi casino live dengan fokus pada dealer cantik dan jackpot besar",
+  },
+  {
+    id: "COMM_4",
+    name: "Sports Betting Network",
+    members: ["acc_sportsbet_pro", "acc_soccer_bet", "acc_odds_master"],
+    size: 3,
+    centrality: 0.52,
+    activity: "Sedang",
+    color: "#22c55e",
+    description: "Komunitas taruhan olahraga dengan spesialisasi sepak bola dan analisis odds",
+  },
+  {
+    id: "COMM_BRIDGE",
+    name: "Hub Connector",
+    members: ["acc_gambling_hub", "acc_betting_news"],
+    size: 2,
+    centrality: 0.85,
+    activity: "Sangat Tinggi",
+    color: "#8b5cf6",
+    description: "Akun penghubung utama yang mengintegrasikan semua komunitas gambling",
   },
 ]
 
 const keyActors = networkData.nodes
   .filter((node) => node.type === "account")
-  .sort((a, b) => b.centrality - a.centrality)
+  .sort((a, b) => (b.centrality || 0) - (a.centrality || 0))
   .slice(0, 5)
+
+// Canvas Network Graph Component
+function NetworkCanvas({ nodes, edges, communities, selectedCommunity }: {
+  nodes: any[]
+  edges: any[]
+  communities: any[]
+  selectedCommunity: string
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const animationRef = useRef<number>()
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null)
+  const [selectedNode, setSelectedNode] = useState<string | null>(null)
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
+
+  // Posisi nodes berdasarkan community dengan force-directed layout
+  const nodePositions = useRef<Map<string, { x: number; y: number; vx: number; vy: number }>>(new Map())
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Setup canvas size
+    const rect = canvas.getBoundingClientRect()
+    canvas.width = rect.width * window.devicePixelRatio
+    canvas.height = rect.height * window.devicePixelRatio
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+
+    // Initialize node positions
+    const filteredNodes = selectedCommunity === "all" 
+      ? nodes 
+      : nodes.filter(node => node.type === "content" || (node.type === "account" && node.community === selectedCommunity))
+
+    filteredNodes.forEach((node, index) => {
+      if (!nodePositions.current.has(node.id)) {
+        const communityIndex = communities.findIndex(c => c.id === node.community)
+        
+        if (node.type === "account") {
+          let x, y
+          
+          // Posisikan berdasarkan community dengan pola yang lebih menarik
+          switch (node.community) {
+            case "COMM_1": // Slot - Kiri atas, cluster besar
+              const slotAngle = (index * Math.PI / 3) + Math.PI / 6
+              const slotRadius = 100 + (node.centrality * 50)
+              x = rect.width * 0.25 + Math.cos(slotAngle) * slotRadius
+              y = rect.height * 0.3 + Math.sin(slotAngle) * slotRadius
+              break
+              
+            case "COMM_2": // Togel - Kanan atas
+              const togelAngle = (index * Math.PI / 2.5) + Math.PI / 4
+              const togelRadius = 80 + (node.centrality * 40)
+              x = rect.width * 0.75 + Math.cos(togelAngle) * togelRadius
+              y = rect.height * 0.25 + Math.sin(togelAngle) * togelRadius
+              break
+              
+            case "COMM_3": // Casino - Kiri bawah
+              const casinoAngle = (index * Math.PI / 2) + Math.PI
+              const casinoRadius = 70 + (node.centrality * 30)
+              x = rect.width * 0.3 + Math.cos(casinoAngle) * casinoRadius
+              y = rect.height * 0.75 + Math.sin(casinoAngle) * casinoRadius
+              break
+              
+            case "COMM_4": // Sports - Kanan bawah
+              const sportsAngle = (index * Math.PI / 1.5) + Math.PI * 1.5
+              const sportsRadius = 60 + (node.centrality * 35)
+              x = rect.width * 0.7 + Math.cos(sportsAngle) * sportsRadius
+              y = rect.height * 0.7 + Math.sin(sportsAngle) * sportsRadius
+              break
+              
+            case "COMM_BRIDGE": // Bridge - Tengah dengan radius besar
+              const bridgeAngle = index * Math.PI
+              const bridgeRadius = 40 + (node.centrality * 20)
+              x = rect.width * 0.5 + Math.cos(bridgeAngle) * bridgeRadius
+              y = rect.height * 0.5 + Math.sin(bridgeAngle) * bridgeRadius
+              break
+              
+            default:
+              const defaultAngle = (communityIndex * 2 * Math.PI / communities.length) + (index * 0.3)
+              const defaultRadius = 100
+              x = rect.width / 2 + Math.cos(defaultAngle) * defaultRadius
+              y = rect.height / 2 + Math.sin(defaultAngle) * defaultRadius
+          }
+          
+          nodePositions.current.set(node.id, { x, y, vx: 0, vy: 0 })
+          
+        } else if (node.type === "content") {
+          // Content nodes ditempatkan dekat dengan account yang posting mereka
+          const relatedEdges = networkData.edges.filter(e => e.dst === node.id && e.type === "posted")
+          if (relatedEdges.length > 0) {
+            const parentAccountId = relatedEdges[0].src
+            const parentPos = nodePositions.current.get(parentAccountId)
+            
+            if (parentPos) {
+              // Tempatkan content di sekitar parent account
+              const contentAngle = Math.random() * 2 * Math.PI
+              const contentRadius = 40 + Math.random() * 20
+              const x = parentPos.x + Math.cos(contentAngle) * contentRadius
+              const y = parentPos.y + Math.sin(contentAngle) * contentRadius
+              
+              nodePositions.current.set(node.id, { x, y, vx: 0, vy: 0 })
+            } else {
+              // Fallback positioning
+              const x = rect.width * 0.5 + (Math.random() - 0.5) * 200
+              const y = rect.height * 0.5 + (Math.random() - 0.5) * 200
+              nodePositions.current.set(node.id, { x, y, vx: 0, vy: 0 })
+            }
+          } else {
+            // Random positioning untuk content tanpa parent yang jelas
+            const x = rect.width * 0.5 + (Math.random() - 0.5) * 200
+            const y = rect.height * 0.5 + (Math.random() - 0.5) * 200
+            nodePositions.current.set(node.id, { x, y, vx: 0, vy: 0 })
+          }
+        }
+      }
+    })
+
+    // Animation loop
+    const animate = () => {
+      ctx.clearRect(0, 0, rect.width, rect.height)
+      
+      // Apply transformations
+      ctx.save()
+      ctx.translate(pan.x, pan.y)
+      ctx.scale(zoom, zoom)
+
+      // Draw grid background
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)'
+      ctx.lineWidth = 1
+      for (let x = 0; x < rect.width; x += 40) {
+        ctx.beginPath()
+        ctx.moveTo(x, 0)
+        ctx.lineTo(x, rect.height)
+        ctx.stroke()
+      }
+      for (let y = 0; y < rect.height; y += 40) {
+        ctx.beginPath()
+        ctx.moveTo(0, y)
+        ctx.lineTo(rect.width, y)
+        ctx.stroke()
+      }
+
+      // Draw edges
+      edges.forEach(edge => {
+        const srcPos = nodePositions.current.get(edge.src)
+        const dstPos = nodePositions.current.get(edge.dst)
+        
+        if (srcPos && dstPos) {
+          ctx.beginPath()
+          ctx.moveTo(srcPos.x, srcPos.y)
+          ctx.lineTo(dstPos.x, dstPos.y)
+          
+          // Edge styling based on type
+          if (edge.type === "posted") {
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)'
+            ctx.lineWidth = 3
+          } else {
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)'
+            ctx.lineWidth = 2
+            ctx.setLineDash([5, 5])
+          }
+          
+          ctx.stroke()
+          ctx.setLineDash([])
+          
+          // Draw arrow
+          const angle = Math.atan2(dstPos.y - srcPos.y, dstPos.x - srcPos.x)
+          const arrowLength = 10
+          ctx.beginPath()
+          ctx.moveTo(dstPos.x, dstPos.y)
+          ctx.lineTo(
+            dstPos.x - arrowLength * Math.cos(angle - Math.PI / 6),
+            dstPos.y - arrowLength * Math.sin(angle - Math.PI / 6)
+          )
+          ctx.moveTo(dstPos.x, dstPos.y)
+          ctx.lineTo(
+            dstPos.x - arrowLength * Math.cos(angle + Math.PI / 6),
+            dstPos.y - arrowLength * Math.sin(angle + Math.PI / 6)
+          )
+          ctx.stroke()
+        }
+      })
+
+      // Draw nodes
+      filteredNodes.forEach(node => {
+        const pos = nodePositions.current.get(node.id)
+        if (!pos) return
+
+        const isHovered = hoveredNode === node.id
+        const isSelected = selectedNode === node.id
+        
+        if (node.type === "account") {
+          const community = communities.find(c => c.id === node.community)
+          // Ukuran berdasarkan centrality dan followers
+          const baseRadius = 20 + (node.centrality * 25) + (node.followers / 10000)
+          const radius = isHovered ? baseRadius + 8 : (isSelected ? baseRadius + 5 : baseRadius)
+          
+          // Node shadow
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.2)'
+          ctx.shadowBlur = isHovered ? 15 : 10
+          ctx.shadowOffsetY = 2
+          
+          // Main circle
+          ctx.beginPath()
+          ctx.arc(pos.x, pos.y, radius, 0, 2 * Math.PI)
+          
+          // Gradient
+          const gradient = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, radius)
+          gradient.addColorStop(0, community?.color || '#64748b')
+          gradient.addColorStop(1, community?.color ? community.color + '80' : '#64748b80')
+          ctx.fillStyle = gradient
+          ctx.fill()
+
+          // Border
+          ctx.strokeStyle = isSelected ? '#1e40af' : (isHovered ? '#ffffff' : community?.color || '#64748b')
+          ctx.lineWidth = isSelected ? 4 : (isHovered ? 3 : 2)
+          ctx.stroke()
+          
+          ctx.shadowColor = 'transparent'
+          ctx.shadowBlur = 0
+
+          // Username
+          ctx.fillStyle = '#ffffff'
+          ctx.font = 'bold 10px sans-serif'
+          ctx.textAlign = 'center'
+          ctx.fillText(node.username.substring(0, 8), pos.x, pos.y + 3)
+
+          // Followers count
+          ctx.fillStyle = '#1e40af'
+          ctx.font = 'bold 8px sans-serif'
+          ctx.fillText(`${(node.followers / 1000).toFixed(0)}K`, pos.x, pos.y + 45)
+
+          // Centrality score
+          if (node.centrality) {
+            ctx.beginPath()
+            ctx.arc(pos.x - 25, pos.y - 25, 12, 0, 2 * Math.PI)
+            ctx.fillStyle = '#1e40af'
+            ctx.fill()
+            ctx.fillStyle = '#ffffff'
+            ctx.font = 'bold 8px sans-serif'
+            ctx.textAlign = 'center'
+            ctx.fillText(node.centrality.toFixed(2), pos.x - 25, pos.y - 21)
+          }
+
+        } else if (node.type === "content") {
+          const size = isHovered ? 18 : (isSelected ? 16 : 14)
+          
+          // Content node (square)
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.1)'
+          ctx.shadowBlur = 5
+          ctx.shadowOffsetY = 1
+          
+          ctx.fillStyle = isHovered ? '#f1f5f9' : '#e2e8f0'
+          ctx.fillRect(pos.x - size/2, pos.y - size/2, size, size)
+          
+          ctx.strokeStyle = isSelected ? '#1e40af' : (isHovered ? '#64748b' : '#94a3b8')
+          ctx.lineWidth = isSelected ? 3 : 2
+          ctx.strokeRect(pos.x - size/2, pos.y - size/2, size, size)
+          
+          ctx.shadowColor = 'transparent'
+          ctx.shadowBlur = 0
+
+          // Content icon
+          ctx.fillStyle = '#64748b'
+          ctx.fillRect(pos.x - 4, pos.y - 4, 8, 8)
+
+          // Watermark count
+          if (node.watermarks) {
+            ctx.beginPath()
+            ctx.arc(pos.x + 12, pos.y - 12, 8, 0, 2 * Math.PI)
+            ctx.fillStyle = '#dc2626'
+            ctx.fill()
+            ctx.fillStyle = '#ffffff'
+            ctx.font = 'bold 8px sans-serif'
+            ctx.textAlign = 'center'
+            ctx.fillText(node.watermarks.toString(), pos.x + 12, pos.y - 8)
+          }
+        }
+      })
+
+      ctx.restore()
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    // Mouse interaction dengan zoom dan pan
+    const getTransformedMousePos = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      const x = (e.clientX - rect.left - pan.x) / zoom
+      const y = (e.clientY - rect.top - pan.y) / zoom
+      return { x, y }
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const rect = canvas.getBoundingClientRect()
+        const currentX = e.clientX - rect.left
+        const currentY = e.clientY - rect.top
+        
+        setPan(prev => ({
+          x: prev.x + (currentX - lastMousePos.x),
+          y: prev.y + (currentY - lastMousePos.y)
+        }))
+        
+        setLastMousePos({ x: currentX, y: currentY })
+        return
+      }
+
+      const { x, y } = getTransformedMousePos(e)
+
+      let found = false
+      filteredNodes.forEach(node => {
+        const pos = nodePositions.current.get(node.id)
+        if (!pos) return
+
+        const distance = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2)
+        const radius = node.type === "account" 
+          ? 20 + (node.centrality * 25) + (node.followers / 10000)
+          : 14
+
+        if (distance < radius) {
+          setHoveredNode(node.id)
+          canvas.style.cursor = 'pointer'
+          found = true
+        }
+      })
+
+      if (!found) {
+        setHoveredNode(null)
+        canvas.style.cursor = isDragging ? 'grabbing' : 'default'
+      }
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+
+      const { x: transformedX, y: transformedY } = getTransformedMousePos(e)
+
+      filteredNodes.forEach(node => {
+        const pos = nodePositions.current.get(node.id)
+        if (!pos) return
+
+        const distance = Math.sqrt((transformedX - pos.x) ** 2 + (transformedY - pos.y) ** 2)
+        const radius = node.type === "account" 
+          ? 20 + (node.centrality * 25) + (node.followers / 10000)
+          : 14
+
+        if (distance < radius) {
+          setSelectedNode(selectedNode === node.id ? null : node.id)
+        }
+      })
+    }
+
+    canvas.addEventListener('mousemove', handleMouseMove)
+    canvas.addEventListener('click', handleClick)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+      canvas.removeEventListener('mousemove', handleMouseMove)
+      canvas.removeEventListener('click', handleClick)
+    }
+  }, [nodes, edges, communities, selectedCommunity, hoveredNode, selectedNode])
+
+  return (
+    <div className="relative w-full h-full">
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full"
+        style={{ width: '100%', height: '100%' }}
+      />
+      
+      {/* Info overlay */}
+      {(hoveredNode || selectedNode) && (
+        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-slate-300 max-w-xs">
+          {(() => {
+            const nodeId = selectedNode || hoveredNode
+            const node = nodes.find(n => n.id === nodeId)
+            if (!node) return null
+
+            return (
+              <div>
+                <div className="flex items-center mb-2">
+                  <div className={`w-3 h-3 rounded-full mr-2 ${node.type === 'account' ? 'bg-blue-500' : 'bg-gray-400'}`}></div>
+                  <h3 className="text-sm font-semibold text-slate-800">
+                    {node.type === 'account' ? `@${node.username}` : 'Content'}
+                  </h3>
+                </div>
+                <div className="text-xs text-slate-600 space-y-1">
+                  {node.type === 'account' ? (
+                    <>
+                      <p>Platform: {node.platform}</p>
+                      <p>Followers: {node.followers?.toLocaleString()}</p>
+                      <p>Centrality: {node.centrality}</p>
+                      <p>Community: {communities.find(c => c.id === node.community)?.name}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>Platform: {node.platform}</p>
+                      <p>Watermarks: {node.watermarks}</p>
+                      <p>OCR: {node.ocrText}</p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )
+          })()}
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border">
+        <div className="text-xs font-medium text-gray-700 mb-2">Node Types</div>
+        <div className="flex items-center space-x-4 text-xs">
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span>Accounts</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <div className="w-3 h-3 bg-gray-400 rounded-sm"></div>
+            <span>Content</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Community Colors */}
+      <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border">
+        <div className="text-xs font-medium text-gray-700 mb-2">Communities</div>
+        <div className="space-y-1">
+          {communities.map(community => (
+            <div key={community.id} className="flex items-center space-x-2 text-xs">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: community.color }}></div>
+              <span className="font-medium">{community.name.split(' ')[0]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function NetworkPage() {
   const [selectedCommunity, setSelectedCommunity] = useState("all")
-  const [selectedNode, setSelectedNode] = useState<string | null>(null)
 
   const filteredNodes =
     selectedCommunity === "all"
@@ -219,10 +897,10 @@ export default function NetworkPage() {
                 <SelectValue placeholder="Pilih komunitas" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Semua Komunitas</SelectItem>
+                <SelectItem value="all">Semua Komunitas ({networkData.nodes.filter(n => n.type === "account").length} akun)</SelectItem>
                 {communities.map((comm) => (
                   <SelectItem key={comm.id} value={comm.id}>
-                    {comm.name}
+                    {comm.name} ({comm.size} akun) - {comm.activity}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -245,346 +923,22 @@ export default function NetworkPage() {
 
         <TabsContent value="visualization" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Main Graph Visualization */}
+                        {/* Main Graph Visualization dengan Canvas */}
             <Card className="lg:col-span-3">
               <CardHeader>
                 <CardTitle>Interactive Network Graph</CardTitle>
                 <CardDescription>
-                  Graf bipartit menampilkan hubungan akun-konten dengan community detection
+                  Graf bipartit menampilkan hubungan akun-konten dengan community detection menggunakan Canvas
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg border-2 border-slate-200 flex items-center justify-center relative overflow-hidden">
-                  {/* Network Graph Simulation */}
-                  <div className="absolute inset-0 p-6">
-                    {/* Community 1 - Slot Online (Red cluster) - Top Left */}
-                    <div className="absolute top-12 left-12">
-                      {/* Main hub account */}
-                      <div className="relative">
-                        <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg animate-pulse">
-                          <div className="text-center">
-                            <div className="text-xs">SLOT</div>
-                            <div className="text-xs">88</div>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-red-700 whitespace-nowrap">
-                          @slot88_gacor
-                        </div>
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                          45K
-                        </div>
-                      </div>
-
-                      {/* Connected accounts */}
-                      <div className="absolute top-20 -left-8">
-                        <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md">
-                          GM
-                        </div>
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-red-600 whitespace-nowrap">
-                          @gacor_maxwin
-                        </div>
-                      </div>
-
-                      <div className="absolute top-20 left-20">
-                        <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md">
-                          BM
-                        </div>
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-red-600 whitespace-nowrap">
-                          @bonus_member
-                        </div>
-                      </div>
-
-                      {/* Content nodes */}
-                      <div className="absolute top-32 left-8">
-                        <div className="w-8 h-8 bg-red-200 rounded-sm flex items-center justify-center shadow-sm">
-                          <div className="w-4 h-4 bg-red-500 rounded-sm"></div>
-                        </div>
-                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-red-500 whitespace-nowrap">
-                          SLOT88 content
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Community 2 - Togel (Orange cluster) - Top Right */}
-                    <div className="absolute top-16 right-16">
-                      {/* Main hub account */}
-                      <div className="relative">
-                        <div className="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                          <div className="text-center">
-                            <div className="text-xs">TGL</div>
-                            <div className="text-xs">HK</div>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-orange-700 whitespace-nowrap">
-                          @togel_hoki
-                        </div>
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                          25K
-                        </div>
-                      </div>
-
-                      {/* Connected account */}
-                      <div className="absolute top-16 -right-12">
-                        <div className="w-10 h-10 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md">
-                          PJ
-                        </div>
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-orange-600 whitespace-nowrap">
-                          @prediksi_jitu
-                        </div>
-                      </div>
-
-                      {/* Content node */}
-                      <div className="absolute top-28 -right-4">
-                        <div className="w-8 h-8 bg-orange-200 rounded-sm flex items-center justify-center shadow-sm">
-                          <div className="w-4 h-4 bg-orange-500 rounded-sm"></div>
-                        </div>
-                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-orange-500 whitespace-nowrap">
-                          TOGEL content
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Community 3 - Casino (Yellow cluster) - Bottom Center */}
-                    <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
-                      {/* Main hub account */}
-                      <div className="relative">
-                        <div className="w-14 h-14 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                          <div className="text-center">
-                            <div className="text-xs">LIVE</div>
-                            <div className="text-xs">CSN</div>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-yellow-700 whitespace-nowrap">
-                          @live_casino
-                        </div>
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                          22K
-                        </div>
-                      </div>
-
-                      {/* Connected accounts */}
-                      <div className="absolute top-0 -left-16">
-                        <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md">
-                          DC
-                        </div>
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-yellow-600 whitespace-nowrap">
-                          @dealer_cantik
-                        </div>
-                      </div>
-
-                      <div className="absolute top-0 right-16">
-                        <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md">
-                          JB
-                        </div>
-                        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-xs text-yellow-600 whitespace-nowrap">
-                          @jackpot_besar
-                        </div>
-                      </div>
-
-                      {/* Content node */}
-                      <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-                        <div className="w-8 h-8 bg-yellow-200 rounded-sm flex items-center justify-center shadow-sm">
-                          <div className="w-4 h-4 bg-yellow-500 rounded-sm"></div>
-                        </div>
-                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-yellow-500 whitespace-nowrap">
-                          CASINO content
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Connection lines using SVG */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-                      <defs>
-                        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-                          <polygon points="0 0, 8 3, 0 6" fill="#64748b" opacity="0.6" />
-                        </marker>
-                        <filter id="glow">
-                          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                          <feMerge>
-                            <feMergeNode in="coloredBlur" />
-                            <feMergeNode in="SourceGraphic" />
-                          </feMerge>
-                        </filter>
-                      </defs>
-
-                      {/* Intra-community connections */}
-                      {/* Slot community connections */}
-                      <line
-                        x1="120"
-                        y1="80"
-                        x2="100"
-                        y2="120"
-                        stroke="#ef4444"
-                        strokeWidth="3"
-                        opacity="0.8"
-                        filter="url(#glow)"
-                      />
-                      <line
-                        x1="120"
-                        y1="80"
-                        x2="140"
-                        y2="120"
-                        stroke="#ef4444"
-                        strokeWidth="3"
-                        opacity="0.8"
-                        filter="url(#glow)"
-                      />
-                      <line
-                        x1="120"
-                        y1="80"
-                        x2="120"
-                        y2="150"
-                        stroke="#ef4444"
-                        strokeWidth="2"
-                        opacity="0.6"
-                        markerEnd="url(#arrowhead)"
-                      />
-
-                      {/* Togel community connections */}
-                      <line
-                        x1="480"
-                        y1="90"
-                        x2="500"
-                        y2="130"
-                        stroke="#f97316"
-                        strokeWidth="3"
-                        opacity="0.8"
-                        filter="url(#glow)"
-                      />
-                      <line
-                        x1="480"
-                        y1="90"
-                        x2="480"
-                        y2="140"
-                        stroke="#f97316"
-                        strokeWidth="2"
-                        opacity="0.6"
-                        markerEnd="url(#arrowhead)"
-                      />
-
-                      {/* Casino community connections */}
-                      <line
-                        x1="300"
-                        y1="280"
-                        x2="270"
-                        y2="280"
-                        stroke="#eab308"
-                        strokeWidth="3"
-                        opacity="0.8"
-                        filter="url(#glow)"
-                      />
-                      <line
-                        x1="300"
-                        y1="280"
-                        x2="330"
-                        y2="280"
-                        stroke="#eab308"
-                        strokeWidth="3"
-                        opacity="0.8"
-                        filter="url(#glow)"
-                      />
-                      <line
-                        x1="300"
-                        y1="280"
-                        x2="300"
-                        y2="250"
-                        stroke="#eab308"
-                        strokeWidth="2"
-                        opacity="0.6"
-                        markerEnd="url(#arrowhead)"
-                      />
-
-                      {/* Inter-community weak connections */}
-                      <line
-                        x1="150"
-                        y1="120"
-                        x2="450"
-                        y2="130"
-                        stroke="#64748b"
-                        strokeWidth="1"
-                        strokeDasharray="5,5"
-                        opacity="0.4"
-                      />
-                      <line
-                        x1="200"
-                        y1="150"
-                        x2="280"
-                        y2="250"
-                        stroke="#64748b"
-                        strokeWidth="1"
-                        strokeDasharray="3,3"
-                        opacity="0.3"
-                      />
-                      <line
-                        x1="450"
-                        y1="140"
-                        x2="320"
-                        y2="260"
-                        stroke="#64748b"
-                        strokeWidth="1"
-                        strokeDasharray="3,3"
-                        opacity="0.3"
-                      />
-                    </svg>
-
-                    {/* Floating info panels */}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border">
-                      <div className="text-xs font-medium text-gray-700 mb-1">Community Detection</div>
-                      <div className="text-xs text-gray-600">Louvain Algorithm</div>
-                      <div className="text-xs text-gray-600">Modularity: 0.72</div>
-                    </div>
-
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border">
-                      <div className="text-xs font-medium text-gray-700 mb-1">Graph Metrics</div>
-                      <div className="text-xs text-gray-600">Density: 0.34</div>
-                      <div className="text-xs text-gray-600">Avg Path: 2.8</div>
-                    </div>
-
-                    <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border">
-                      <div className="text-xs font-medium text-gray-700 mb-2">Node Types</div>
-                      <div className="flex items-center space-x-4 text-xs">
-                        <div className="flex items-center space-x-1">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                          <span>Accounts</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="w-3 h-3 bg-gray-400 rounded-sm"></div>
-                          <span>Content</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Center overlay info - Improved positioning */}
-                  <div className="absolute bottom-6 right-6 pointer-events-none" style={{ zIndex: 2 }}>
-                    <div className="text-left bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-slate-300 max-w-xs">
-                      <div className="flex items-center mb-2">
-                        <Network className="h-5 w-5 text-slate-600 mr-2" />
-                        <h3 className="text-sm font-semibold text-slate-800">Analysis Results</h3>
-                      </div>
-                      <div className="text-xs text-slate-600 mb-3 space-y-1">
-                        <p>
-                          {filteredNodes.filter((n) => n.type === "account").length} accounts •{" "}
-                          {filteredNodes.filter((n) => n.type === "content").length} content
-                        </p>
-                        <p>{networkData.edges.length} connections detected</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <div className="flex items-center space-x-1">
-                          <div className="w-3 h-3 bg-red-500 rounded-full shadow-sm"></div>
-                          <span className="font-medium">Slot</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="w-3 h-3 bg-orange-500 rounded-full shadow-sm"></div>
-                          <span className="font-medium">Togel</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="w-3 h-3 bg-yellow-500 rounded-full shadow-sm"></div>
-                          <span className="font-medium">Casino</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg border-2 border-slate-200 relative overflow-hidden">
+                  <NetworkCanvas 
+                    nodes={networkData.nodes}
+                    edges={networkData.edges}
+                    communities={communities}
+                    selectedCommunity={selectedCommunity}
+                  />
                 </div>
               </CardContent>
             </Card>
