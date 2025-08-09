@@ -121,7 +121,7 @@ export default function AdminLoginPage() {
               </Button>
             </form>
 
-            {/* <div className="mt-6 p-4 border rounded-lg bg-gray-50">
+            <div className="mt-6 p-4 border rounded-lg bg-gray-50">
               <p className="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</p>
               <p className="text-sm text-gray-600">
                 Username: <span className="font-mono font-medium text-black">admin</span>
@@ -129,7 +129,7 @@ export default function AdminLoginPage() {
               <p className="text-sm text-gray-600">
                 Password: <span className="font-mono font-medium text-black">jejakjudi2025</span>
               </p>
-            </div> */}
+            </div>
           </CardContent>
         </Card>
 
