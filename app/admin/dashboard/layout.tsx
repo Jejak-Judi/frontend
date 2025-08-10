@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import {
   Sidebar,
   SidebarContent,
@@ -56,6 +56,7 @@ export default function AdminLayout({
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token")
@@ -100,16 +101,28 @@ export default function AdminLayout({
                 <SidebarGroupLabel className="text-slate-600 font-medium">{group.title}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {group.items.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild>
-                          <Link href={item.url} className="flex items-center space-x-3">
-                            <item.icon className="h-4 w-4" />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
+                    {group.items.map((item) => {
+                      const isActive = pathname === item.url
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild isActive={isActive}>
+                            <Link 
+                              href={item.url} 
+                              className={`flex items-center space-x-3 transition-colors ${
+                                isActive 
+                                  ? "bg-slate-100 text-slate-900 font-medium" 
+                                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                              }`}
+                            >
+                              <item.icon className={`h-4 w-4 ${
+                                isActive ? "text-slate-900" : "text-slate-500"
+                              }`} />
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                    })}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
